@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Security;
 using System.IO;
 using System.Data;
+using System.Xml;
 
 namespace IconAPI
 {
@@ -78,38 +79,10 @@ namespace IconAPI
 		}
 	}
 	
-	public class Directoryindex
+	public static class HttpRequestHandler
 	{
-		private IconAuth auth;
-		private DataSet directoryDS;
-		private string httpRequest;
-		
-		public DataSet Directory
+		public static HttpWebResponse SendRequest(string httpRequest)
 		{
-			get { return directoryDS; }
-		}
-		
-		public static bool Validator(object sender, X509Certificate certificate, 
-		                             X509Chain chain, SslPolicyErrors sslErrs)
-		{
-			return true;
-		}
-		
-		public Directoryindex(IconAuth _auth)
-		{
-			auth = _auth;
-			directoryDS = new DataSet();
-			
-			// Form the http request
-			httpRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-							"<Icon>" +
-							auth.GetAuthXML() +
-							"<Request>" +
-								"<Module>membership</Module>" +
-								"<Section>directoryindex</Section>" +
-							"</Request>" +
-							"</Icon>";
-
 			HttpWebRequest request = (HttpWebRequest) WebRequest.Create("https://secure3.iconcmo.com/api/");
 			request.ContentType = "application/xml";
 			request.KeepAlive = false;
@@ -131,8 +104,57 @@ namespace IconAPI
 			requestStream.Close();
 			
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			directoryDS.ReadXml(new StreamReader(response.GetResponseStream()));
+			return response;
+		}
+		
+		public static bool Validator(object sender, X509Certificate certificate, 
+		                             X509Chain chain, SslPolicyErrors sslErrs)
+		{
+			return true;
+		}
+		
+		public static string BuildRequest(string requestData, IconAuth _auth)
+		{
+			return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+					"<Icon>" +
+					_auth.GetAuthXML() +
+					"<Request>" +
+						requestData + 
+					"</Request>" +
+					"</Icon>";
+		}
+		
+		public static void GetSession(DataSet ds, ref IconAuth _auth)
+		{
+			_auth.Session = ds.Tables["iconresponse"].Rows[0]["session"].ToString();
+		}
+		
+	}
+
+	public class Directoryindex
+	{
+		private IconAuth auth;
+		private DataSet directoryDS;
+		private string httpRequest;
+		
+		public DataSet Directory
+		{
+			get { return directoryDS; }
+		}
+		
+		public Directoryindex(IconAuth _auth)
+		{
+			auth = _auth;
+			directoryDS = new DataSet();
 			
+			// Form the http request
+			httpRequest = HttpRequestHandler.BuildRequest("<Module>membership</Module>" +
+														"<Section>directoryindex</Section>",
+														_auth);
+			
+			HttpWebResponse response = HttpRequestHandler.SendRequest(httpRequest);
+			directoryDS.ReadXml(new StreamReader(response.GetResponseStream()));
+			HttpRequestHandler.GetSession(directoryDS, ref auth);
 		}
 	
 	}
