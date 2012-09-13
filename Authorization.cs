@@ -82,9 +82,11 @@ namespace IconAPI
 		private string role;
 		private XmlDocument xmlDoc;
 		private string httpRequest;
+		private IconAuth auth;
 		
-		public Permissions(IconAuth auth)
+		public Permissions(IconAuth _auth)
 		{
+			auth = _auth;	
 			xmlDoc = new XmlDocument();
 			permissions = new Collection<Permission>();
 			
@@ -102,8 +104,8 @@ namespace IconAPI
 			// Load the permissions
 			LoadPermissions();
 			// Get the role
-			XmlNode wrkNode = xmlDoc.SelectSingleNode("role");
-			role = wrkNode.Value;
+			XmlNode wrkNode = xmlDoc.SelectSingleNode("/iconresponse/role");
+			role = wrkNode.InnerText;
 		}
 		
 		public Collection<Permission> Entries
@@ -116,31 +118,39 @@ namespace IconAPI
 			get { return role; }
 		}
 		
+		public IconAuth Auth
+		{
+			get { return auth; } 
+			set { auth = value; }
+		}
+		
 		private void LoadPermissions()
 		{
 			// Get the permission nodes
-			XmlNodeList nodes = xmlDoc.SelectNodes("/iconresponse/Permissions");
+			XmlNodeList nodes = xmlDoc.SelectNodes("/iconresponse/Permissions/*");
 			foreach (XmlNode node in nodes)
 			{
 				// Create a permission entry and add to the collection
 				Permission entry = new Permission();
+				// This should be the Module node
 				entry.Module = node.Name;
+				// Get the group nodes
 				XmlNodeList sectionNodes = node.ChildNodes;
 				foreach (XmlNode sectionNode in sectionNodes)
 				{
 					entry.Section = sectionNode.Name;
 					XmlNode wrkNode = sectionNode.SelectSingleNode("create");
 					bool wrkBool = false;
-					bool.TryParse(wrkNode.Value, out wrkBool);
+					bool.TryParse(wrkNode.InnerText, out wrkBool);
 					entry.Create = wrkBool;
 					wrkNode = sectionNode.SelectSingleNode("read");
-					bool.TryParse(wrkNode.Value, out wrkBool);
+					bool.TryParse(wrkNode.InnerText, out wrkBool);
 					entry.Read = wrkBool;
 					wrkNode = sectionNode.SelectSingleNode("update");
-					bool.TryParse(wrkNode.Value, out wrkBool);
+					bool.TryParse(wrkNode.InnerText, out wrkBool);
 					entry.Update = wrkBool;
 					wrkNode = sectionNode.SelectSingleNode("delete");
-					bool.TryParse(wrkNode.Value, out wrkBool);
+					bool.TryParse(wrkNode.InnerText, out wrkBool);
 					entry.Delete = wrkBool;
 				}
 			}
