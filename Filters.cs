@@ -1,6 +1,6 @@
 using System;
 
-namespace IconAPI
+namespace IconCMO
 {
 	public class IconFilter
 	{

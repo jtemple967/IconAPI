@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Xml;
 
-namespace IconAPI
+namespace IconCMO
 {
 	public class IconAuth
 	{

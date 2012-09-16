@@ -5,10 +5,10 @@ using System.IO;
 using System.Net;
 using System.Xml;
 
-namespace IconAPI
+namespace IconCMO
 {
 	
-	public class Directoryindex
+	public class DirectoryIndex
 	{
 		private IconAuth auth;
 		private string httpRequest;
@@ -16,7 +16,7 @@ namespace IconAPI
 		private IconFilter filter;
 		private Collection<DirectoryIndexEntry> entries;
 			
-		public Directoryindex(IconAuth _auth, IconFilter _filter)
+		public DirectoryIndex(IconAuth _auth, IconFilter _filter)
 		{
 			auth = _auth;
 			filter = _filter;
@@ -39,7 +39,7 @@ namespace IconAPI
 			
 		}
 
-		public Directoryindex(IconAuth _auth) : this(_auth, null)
+		public DirectoryIndex(IconAuth _auth) : this(_auth, null)
 		{
 			
 		}

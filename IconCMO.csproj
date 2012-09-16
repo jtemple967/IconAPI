@@ -40,6 +40,7 @@
     <Compile Include="Authorization.cs" />
     <Compile Include="Filters.cs" />
     <Compile Include="Communication.cs" />
+    <Compile Include="IconAPI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

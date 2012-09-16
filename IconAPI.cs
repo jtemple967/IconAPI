@@ -1,14 +1,36 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Net;
-using System.Net.Security;
-using System.IO;
-using System.Data;
-using System.Xml;
+using System.Collections;
+using System.Collections.ObjectModel;
 
-namespace IconAPI
+namespace IconCMO
 {
-	
+	public class IconAPI
+	{
+		private IconAuth auth = null;
+		private Permissions permissions = null;
+		private DirectoryIndex dirIndex = null;
+		
+		public IconAPI (IconAuth _auth)
+		{
+			auth = _auth;
+			// Load the permissions once for this users
+			permissions = new Permissions(auth);
+			// Get the returned authorization structure once. The session token 
+			// should now be set
+			auth = permissions.Auth;
+			
+		}
+		
+		public Collection<DirectoryIndexEntry> GetDirectoryIndexEntries(IconFilter _filter)
+		{
+			dirIndex = new DirectoryIndex(auth, _filter);
+			return dirIndex.Entries;
+		}
+			
+		public Collection<Permission> Permissions
+		{
+			get { return permissions.Entries; }
+		}
+	}
 }
 

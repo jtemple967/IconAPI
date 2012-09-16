@@ -6,7 +6,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;	
 
-namespace IconAPI
+namespace IconCMO
 {
 	public static class HttpRequestHandler
 	{
