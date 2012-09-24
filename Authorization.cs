@@ -94,7 +94,8 @@ namespace IconCMO
 			httpRequest = HttpRequestHandler.BuildRequest("<Module>user</Module>" +
 														"<Section>permissions</Section>",
 														null,
-														auth);
+														auth,
+														null);
 			// Send the request
 			HttpWebResponse response = HttpRequestHandler.SendRequest(httpRequest);
 			// Load the response into an XML document
