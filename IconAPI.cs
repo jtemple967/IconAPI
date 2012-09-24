@@ -21,9 +21,9 @@ namespace IconCMO
 			
 		}
 		
-		public Collection<DirectoryIndexEntry> GetDirectoryIndexEntries(IconFilter _filter)
+		public Collection<DirectoryIndexEntry> GetDirectoryIndexEntries(IconFilter _filter, IconSort _sort)
 		{
-			dirIndex = new DirectoryIndex(auth, _filter);
+			dirIndex = new DirectoryIndex(auth, _filter, _sort);
 			return dirIndex.Entries;
 		}
 			

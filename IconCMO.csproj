@@ -41,6 +41,7 @@
     <Compile Include="Filters.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="IconAPI.cs" />
+    <Compile Include="Sort.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

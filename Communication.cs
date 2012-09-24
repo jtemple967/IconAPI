@@ -42,13 +42,18 @@ namespace IconCMO
 			return true;
 		}
 		
-		public static string BuildRequest(string requestData, IconFilter _filter, IconAuth _auth)
+		public static string BuildRequest(string requestData, IconFilter _filter, IconAuth _auth, IconSort _sort)
 		{
-			string filter;
+			string filter, sort;
 			if (_filter == null)
 				filter = string.Empty;
 			else
 				filter = _filter.GetFilterXML();
+			
+			if (_sort == null)
+				sort = string.Empty;
+			else
+				sort = _sort.GetSortXML();
 	
 			return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 					"<Icon>" +
@@ -56,6 +61,7 @@ namespace IconCMO
 					"<Request>" +
 						requestData + 
 						filter + 
+						sort +
 					"</Request>" +
 					"</Icon>";
 		}
