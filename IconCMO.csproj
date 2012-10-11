@@ -36,12 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Membership.cs" />
     <Compile Include="Authorization.cs" />
     <Compile Include="Filters.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="IconAPI.cs" />
     <Compile Include="Sort.cs" />
+    <Compile Include="MembershipHousehold.cs" />
+    <Compile Include="MembershipMember.cs" />
+    <Compile Include="MembershipDirectory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

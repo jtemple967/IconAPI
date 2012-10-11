@@ -12,6 +12,8 @@ namespace IconCMO
 		private Directory directory = null;
 		private HouseholdIndex houseIndex = null;
 		private Household household = null;
+		private MemberIndex memberIndex = null;
+		private Member member = null;
 		
 		public IconAPI (IconAuth _auth)
 		{
@@ -58,6 +60,20 @@ namespace IconCMO
 			household = new Household(auth, _filter, _sort);
 			household.GetEntries();
 			return household.Entries;
+		}
+		
+		public Collection<MemberIndexEntry> GetMemberIndexEntries(IconFilter _filter, IconSort _sort)
+		{
+			memberIndex = new MemberIndex(auth, _filter, _sort);
+			memberIndex.GetEntries();
+			return memberIndex.Entries;
+		}
+		
+		public Collection<MemberEntry> GetMemberEntries(IconFilter _filter, IconSort _sort)
+		{
+			member = new Member(auth, _filter, _sort);
+			member.GetEntries();
+			return member.Entries;
 		}
 		
 		public Collection<Permission> Permissions
