@@ -14,7 +14,8 @@ namespace IconCMO
 		private Household household = null;
 		private MemberIndex memberIndex = null;
 		private Member member = null;
-		
+		private GroupMember groupMember = null;
+
 		public IconAPI (IconAuth _auth)
 		{
 			auth = _auth;
@@ -74,6 +75,13 @@ namespace IconCMO
 			member = new Member(auth, _filter, _sort);
 			member.GetEntries();
 			return member.Entries;
+		}
+		
+		public Collection<GroupCategoryEntry> GetGroupCategoryEntries(IconFilter _filter, IconSort _sort)
+		{
+			groupMember = new GroupMember(auth, _filter, _sort);
+			groupMember.GetEntries();
+			return groupMember.Entries;
 		}
 		
 		public Collection<Permission> Permissions

@@ -44,6 +44,7 @@
     <Compile Include="MembershipHousehold.cs" />
     <Compile Include="MembershipMember.cs" />
     <Compile Include="MembershipDirectory.cs" />
+    <Compile Include="Groups.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
