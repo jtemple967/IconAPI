@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Xml;
 
 namespace IconCMO
@@ -145,6 +146,7 @@ namespace IconCMO
 		private IconSort sort;
 		private Collection<DirectoryEntry> entries;
 		private bool getNotes;
+		private Collection<string> imageList;
 		
 		public Directory(IconAuth _auth, IconFilter _filter, IconSort _sort)
 		{
@@ -153,7 +155,7 @@ namespace IconCMO
 			filter = _filter;
 			sort = _sort;
 			entries = null;
-			
+			imageList = new Collection<string>();
 		}
 
 		public Directory(IconAuth _auth) : this(_auth, null, null)
@@ -172,7 +174,7 @@ namespace IconCMO
 			set { getNotes = value; }
 		}
 		
-		public void GetEntries()
+		public void GetEntries(string localImageCache)
 		{
 			xmlDoc = new XmlDocument();
 			entries = new Collection<DirectoryEntry>();
@@ -197,11 +199,19 @@ namespace IconCMO
 			// Extract the security token from the response
 			HttpRequestHandler.GetSession(xmlDoc, ref auth);
 			// Load the directory entries
-			LoadEntries();
+			LoadEntries(localImageCache);
+			// Are we downloading images?
+			if (localImageCache != null && localImageCache != string.Empty)
+			{
+				// Create the downloader class
+				ImageDownloader imageDownloader = new ImageDownloader(imageList, localImageCache);
+				Thread imageThread = new Thread(new ThreadStart(imageDownloader.DownloadImages));
+				imageThread.Start();
+			}
 			
 		}
 		
-		private void LoadEntries()
+		private void LoadEntries(string localImageCache)
 		{
 			string dirXPath; 
 			
@@ -266,6 +276,14 @@ namespace IconCMO
 				entry.Picture = wrkNode.InnerText;
 				wrkNode = node.SelectSingleNode("thumbnail");
 				entry.Thumbnail = wrkNode.InnerText;
+				// Are we downloading images?
+				if (localImageCache != string.Empty) 
+				{
+					if (entry.Picture != null && entry.Picture != string.Empty)
+						imageList.Add(entry.Picture);
+					if (entry.Thumbnail != null && entry.Thumbnail != string.Empty)
+						imageList.Add(entry.Thumbnail);
+				}
 				// Did we include notes?
 				if (getNotes)
 				{

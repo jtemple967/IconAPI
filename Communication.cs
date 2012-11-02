@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;	
 using System.Net;
@@ -73,5 +75,29 @@ namespace IconCMO
 		}
 		
 	}
+	
+	public class ImageDownloader
+	{
+		private Collection<string> imageList;
+		private string localImageCache;
+		
+		public ImageDownloader(Collection<string> _imageList, string _localImageCache)
+		{
+			imageList = _imageList;
+			localImageCache = _localImageCache;
+		}
+		
+		public void DownloadImages()
+		{
+			WebClient client = new WebClient();
+			foreach (string image in imageList)
+			{
+				string targetFile = localImageCache + Path.DirectorySeparatorChar + Path.GetFileName(image);
+				if (!File.Exists(targetFile))
+					client.DownloadFile(new Uri(image), targetFile);
+			}
+		}
+	}
+				
 }
 

@@ -15,10 +15,12 @@ namespace IconCMO
 		private MemberIndex memberIndex = null;
 		private Member member = null;
 		private GroupMember groupMember = null;
+		private String localImageCache = null;
 
-		public IconAPI (IconAuth _auth)
+		public IconAPI (IconAuth _auth, string _localImageCache = null)
 		{
 			auth = _auth;
+			localImageCache = _localImageCache;
 			// Load the permissions once for this users
 			permissions = new Permissions(auth);
 			// Get the returned authorization structure once. The session token 
@@ -37,7 +39,7 @@ namespace IconCMO
 		public Collection<DirectoryEntry> GetDirectoryEntries(IconFilter _filter, IconSort _sort)
 		{
 			directory = new Directory(auth, _filter, _sort);
-			directory.GetEntries();
+			directory.GetEntries(localImageCache);
 			return directory.Entries;
 		}
 		
@@ -45,7 +47,7 @@ namespace IconCMO
 		{
 			directory = new Directory(auth, _filter, _sort);
 			directory.Notes = true;
-			directory.GetEntries();
+			directory.GetEntries(localImageCache);
 			return directory.Entries;
 		}
 		
@@ -59,7 +61,7 @@ namespace IconCMO
 		public Collection<HouseholdEntry> GetHouseholdEntries(IconFilter _filter, IconSort _sort)
 		{
 			household = new Household(auth, _filter, _sort);
-			household.GetEntries();
+			household.GetEntries(localImageCache);
 			return household.Entries;
 		}
 		
@@ -73,7 +75,7 @@ namespace IconCMO
 		public Collection<MemberEntry> GetMemberEntries(IconFilter _filter, IconSort _sort)
 		{
 			member = new Member(auth, _filter, _sort);
-			member.GetEntries();
+			member.GetEntries(localImageCache);
 			return member.Entries;
 		}
 		
@@ -87,6 +89,12 @@ namespace IconCMO
 		public Collection<Permission> Permissions
 		{
 			get { return permissions.Entries; }
+		}
+		
+		public String LocalImageCache
+		{
+			get { return localImageCache; }
+			set { localImageCache = value; }
 		}
 	}
 }
